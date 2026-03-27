@@ -26,13 +26,6 @@
             50% { opacity: 0.5; border-color: transparent; box-shadow: none; }
         }
 
-        .welcome-msg {
-            text-align: center; padding: 15px; background: rgba(79, 172, 254, 0.1);
-            border: 2px dashed var(--primary); border-radius: 12px;
-            margin: 0 auto 20px auto; max-width: 1210px; color: var(--accent); font-size: 13px;
-            animation: flashNotice 0.8s ease-in-out 6;
-        }
-
         .master-controls {
             position: sticky; top: 20px; z-index: 1000;
             background: var(--glass); backdrop-filter: blur(15px);
@@ -76,7 +69,20 @@
         .font-grid { display: grid; grid-template-columns: repeat(auto-fit, var(--grid-width)); gap: 20px; justify-content: center; margin: 20px auto; }
         .font-card { background: var(--card-bg); border-radius: 15px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); width: var(--grid-width); }
         .preview-wrapper { min-height: 140px; display: flex; align-items: center; justify-content: center; padding: 15px; transition: background 0.3s; }
-        .preview-text { font-size: var(--fs, 35px); color: var(--text-color, #4facfe); text-align: center; line-height: 1.2; word-break: break-all; }
+        
+        .preview-text { 
+            font-size: var(--fs, 35px); 
+            color: var(--text-color, #4facfe); 
+            text-align: center; 
+            line-height: 1.1; 
+            word-break: break-all; 
+            white-space: pre-wrap;
+            /* CỐ ĐỊNH CHỐNG TÁCH CHỮ S */
+            display: inline-block;
+            text-rendering: geometricPrecision; /* Ép Canvas tính toán hình học thay vì hiển thị nhanh */
+            font-variant-ligatures: none; /* Tắt tự động dính chữ để spacing có tác dụng đều hơn */
+            -webkit-font-smoothing: antialiased;
+        }
 
         .card-footer { padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.9); }
         .font-info { display: flex; flex-direction: column; gap: 4px; max-width: 55%; }
@@ -128,8 +134,8 @@
             <div class="control-item"><label>Viền</label><input type="color" id="strokeColor" value="#000000" oninput="updateAll()"></div>
         </div>
         <div class="spacing-row">
-            <div class="control-item"><label>Khoảng cách giữa các chữ cái </label><div class="input-with-btn"><input type="number" id="spacingText" value="2"><button class="btn-apply-small" onclick="updateAll()">OK</button></div></div>
-            <div class="control-item"><label>Khoảng cách giữa các từ</label><div class="input-with-btn"><input type="number" id="wordSpacing" value="5"><button class="btn-apply-small" onclick="updateAll()">OK</button></div></div>
+            <div class="control-item"><label>Khoảng cách chữ cái</label><div class="input-with-btn"><input type="number" id="spacingText" value="0"><button class="btn-apply-small" onclick="updateAll()">OK</button></div></div>
+            <div class="control-item"><label>Khoảng cách các từ</label><div class="input-with-btn"><input type="number" id="wordSpacing" value="0"><button class="btn-apply-small" onclick="updateAll()">OK</button></div></div>
         </div>
     </div>
 </div>
@@ -137,7 +143,6 @@
 <div id="fontGrid" class="font-grid"></div>
 
 <script>
-    // --- PHẦN LOGIC CODE GIỮ NGUYÊN ---
     const IPFS_LINKS = ["https://tomato-delicate-zebra-533.mypinata.cloud/ipfs/bafybeihealjo5tc2mvh3ksx22ps7yjbpcj4pkm67r33qkx72ppw5lberau","https://ipfs.io/ipfs/bafybeicbczbfcyi4ahwe4f5flrq2d2nalddy3usbjeiqy247pyeuybi63q","https://ipfs.io/ipfs/bafybeibpq4mm4gojqtqe4q4bzaikdcglxmrnalniolnnet4nrc75f6ayt4"];
     let db; let allCards = [];
     const req = indexedDB.open("FontStorePro", 1);
@@ -169,7 +174,7 @@
                     }
                 } catch(e) {}
             }
-            document.getElementById('status').innerText = `✅ Đã copy xong!: ${count} FONTS`;
+            document.getElementById('status').innerText = `✅ Đã xong!: ${count} FONTS`;
         }
     }
 
@@ -181,17 +186,15 @@
             const card = document.createElement('div');
             card.className = 'font-card';
             card.setAttribute('data-name', name.toLowerCase());
-            card.innerHTML = `<div class="preview-wrapper" id="wrap_${fontId}"><div class="preview-text" style="font-family: '${fontId}'">${document.getElementById('mainInput').value || 'Sadhu Sadhu!'}</div></div><div class="card-footer"><div class="font-info"><span class="font-name" title="${name}">${name}</span><button class="btn-copy-name" onclick="copyFontName('${name}', this)">COPY FONT</button></div><div class="footer-btns"><button class="btn-copy" onclick="copyToClipboard(this)">Copy chữ </button><button class="btn-download" onclick="downloadSmart('${fontId}', '${name}')"> Tải PNG</button></div></div>`;
+            card.innerHTML = `<div class="preview-wrapper" id="wrap_${fontId}"><div class="preview-text" style="font-family: '${fontId}'">${document.getElementById('mainInput').value || 'Sadhu Sadhu!'}</div></div><div class="card-footer"><div class="font-info"><span class="font-name" title="${name}">${name}</span><button class="btn-copy-name" onclick="copyFontName('${name}', this)">COPY FONT</button></div><div class="footer-btns"><button class="btn-copy" onclick="copyToClipboard(this)">Copy</button><button class="btn-download" onclick="downloadSmart('${fontId}', '${name}')">PNG</button></div></div>`;
             document.getElementById('fontGrid').appendChild(card);
             allCards.push(card);
             updateAll();
         });
     }
 
-    // --- SỬA LỖI NÚT PASTE Ở ĐÂY ---
     async function pasteFontName(btn) {
         try {
-            // Cách 1: Thử dùng API Clipboard hiện đại
             const text = await navigator.clipboard.readText();
             if (text) {
                 const input = document.getElementById('filterInput');
@@ -201,9 +204,7 @@
                 setTimeout(() => btn.innerText = "PASTE", 800);
             }
         } catch (err) {
-            // Cách 2: Nếu bị chặn quyền (thường dính ở Chrome), báo người dùng dán tay hoặc kiểm tra quyền
-            console.warn('Clipboard API bị chặn hoặc không khả dụng.');
-            alert("Trình duyệt yêu cầu quyền truy cập Clipboard. Bạn hãy nhấn Ctrl+V vào ô tìm kiếm nhé!");
+            alert("Hãy nhấn Ctrl+V vào ô tìm kiếm nhé!");
         }
     }
 
@@ -253,7 +254,17 @@
         const wrap = document.getElementById('wrap_' + id);
         const isKeepBg = document.getElementById('keepBg').checked;
         const bgColor = isKeepBg ? document.getElementById('colorBg').value : null;
-        const canvas = await html2canvas(wrap, { backgroundColor: bgColor, scale: 5, useCORS: true, logging: false });
+        const canvas = await html2canvas(wrap, { 
+            backgroundColor: bgColor, 
+            scale: 5, 
+            useCORS: true, 
+            logging: false,
+            // Ép Canvas Render lại với độ chính xác hình học cao nhất
+            onclone: (clonedDoc) => {
+                const el = clonedDoc.getElementById('wrap_' + id).querySelector('.preview-text');
+                el.style.textRendering = "geometricPrecision";
+            }
+        });
         const link = document.createElement('a'); link.download = name + ".png"; link.href = canvas.toDataURL("image/png"); link.click();
     }
 </script>
