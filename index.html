@@ -12,209 +12,156 @@
             --bg-dark: #0f172a;
             --card-bg: #1e293b;
             --glass: rgba(30, 41, 59, 0.7);
+            --input-height: 38px;
+            --grid-width: 500px;
         }
 
         body { 
-            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif; 
-            background: var(--bg-dark); 
-            color: #f8fafc; 
-            margin: 0; 
-            padding: 20px;
-            background-image: radial-gradient(circle at top right, #1e293b, #0f172a);
-            background-attachment: fixed;
+            font-family: 'Inter', sans-serif; background: var(--bg-dark); color: #f8fafc; margin: 0; padding: 20px;
+            background-image: radial-gradient(circle at top right, #1e293b, #0f172a); background-attachment: fixed;
         }
 
-        /* Header Status */
-        #status { 
-            text-align: center; 
-            margin-bottom: 20px; 
-            font-size: 14px;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        @keyframes flashNotice {
+            0%, 100% { opacity: 1; border-color: var(--primary); box-shadow: 0 0 10px rgba(79, 172, 254, 0.5); }
+            50% { opacity: 0.5; border-color: transparent; box-shadow: none; }
         }
 
-        /* Bảng điều khiển Lung Linh */
+        .welcome-msg {
+            text-align: center; padding: 15px; background: rgba(79, 172, 254, 0.1);
+            border: 2px dashed var(--primary); border-radius: 12px;
+            margin: 0 auto 20px auto; max-width: 1210px; color: var(--accent); font-size: 13px;
+            animation: flashNotice 0.8s ease-in-out 6;
+        }
+
         .master-controls {
             position: sticky; top: 20px; z-index: 1000;
-            background: var(--glass);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 25px; 
-            border-radius: 20px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            margin-bottom: 40px; 
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
-            gap: 20px;
-            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--glass); backdrop-filter: blur(15px);
+            padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            margin: 0 auto 30px auto; max-width: 1250px;
+            display: grid; grid-template-columns: 1fr 400px; gap: 20px;
         }
 
-        .control-group { display: flex; flex-direction: column; gap: 8px; width: 150px; }
-        .control-group1 { display: flex; flex-direction: column; gap: 8px; width: 80px; }
-        
-        .control-group label {
-            font-size: 11px;
-            font-weight: 700;
-            color: #94a3b8;
-            text-transform: uppercase;
+        .left-panel { display: flex; flex-direction: column; gap: 15px; }
+        .right-panel { display: flex; flex-direction: column; gap: 15px; padding-left: 20px; border-left: 1px solid rgba(255,255,255,0.1); }
+        .search-export-row { display: grid; grid-template-columns: 1fr 180px; gap: 10px; }
+        .params-row, .colors-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .spacing-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        .control-item { display: flex; flex-direction: column; gap: 5px; }
+        label { font-size: 9px; font-weight: 800; color: #94a3b8; text-transform: uppercase; }
+
+        textarea#mainInput, input[type="text"], input[type="number"] { 
+            width: 100%; box-sizing: border-box; padding: 0 12px;
+            background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.1); 
+            color: white; border-radius: 8px; font-size: 13px; height: var(--input-height);
+        }
+        textarea#mainInput { height: 80px; padding: 10px; line-height: 1.4; }
+
+        .input-with-btn { display: flex; gap: 4px; }
+        .btn-apply-small {
+            background: var(--primary); border: none; color: #0f172a; border-radius: 8px;
+            padding: 0 10px; cursor: pointer; font-size: 10px; font-weight: 800; height: var(--input-height);
         }
 
-        input[type="text"] { 
-            padding: 10px 15px; 
-            background: rgba(0,0,0,0.2); 
-            border: 1px solid rgba(255,255,255,0.1); 
-            color: white; 
-            border-radius: 10px;
-            outline: none;
-            transition: 0.3s;
+        input[type="color"] { -webkit-appearance: none; border: 1px solid rgba(255,255,255,0.1); width: 100%; height: var(--input-height); cursor: pointer; background: none; border-radius: 8px; padding: 2px;}
+
+        .checkbox-wrapper {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: rgba(15, 23, 42, 0.8); border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1); height: var(--input-height); cursor: pointer;
         }
 
-        input[type="text"]:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(79, 172, 254, 0.3); }
+        .font-grid { display: grid; grid-template-columns: repeat(auto-fit, var(--grid-width)); gap: 20px; justify-content: center; margin: 20px auto; }
+        .font-card { background: var(--card-bg); border-radius: 15px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); width: var(--grid-width); }
+        .preview-wrapper { min-height: 140px; display: flex; align-items: center; justify-content: center; padding: 15px; transition: background 0.3s; }
+        .preview-text { font-size: var(--fs, 35px); color: var(--text-color, #4facfe); text-align: center; line-height: 1.2; word-break: break-all; }
 
-        /* Custom Range Slider */
-        input[type="range"] {
-            -webkit-appearance: none;
-            height: 6px;
-            background: #334155;
-            border-radius: 5px;
-            outline: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 18px; height: 18px;
-            background: var(--primary);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
-
-        /* Color Input */
-        input[type="color"] {
-            -webkit-appearance: none;
-            border: none; width: 100%; height: 35px;
-            cursor: pointer; background: none;
-        }
-        input[type="color"]::-webkit-slider-thumb { border-radius: 10px; }
-
-        /* Grid hiển thị Font */
-        .font-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
-            gap: 25px; 
-        }
-
-        /* Font Card tinh tế */
-        .font-card { 
-            background: var(--card-bg); 
-            border-radius: 18px; 
-            overflow: hidden; 
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
-        }
-
-        .font-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-            border-color: rgba(79, 172, 254, 0.4);
-        }
-
-        .preview-wrapper {
-            height: 150px; display: flex; align-items: center; justify-content: center;
-            background: var(--bg-color, #1a1a1a);
-            overflow: hidden; position: relative;
-            transition: background 0.3s;
-        }
-
-        .preview-text {
-            font-size: var(--fs, 35px);
-            color: var(--text-color, #4facfe);
-            letter-spacing: var(--ls, 0px);
-            -webkit-text-stroke: var(--sw, 0px) var(--sc, #000);
-            white-space: nowrap;
-            transition: 0.1s;
-        }
-
-        .card-footer { 
-            padding: 15px 20px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            background: rgba(15, 23, 42, 0.5); 
-        }
-
-        .font-name { font-size: 12px; font-weight: 500; color: #cbd5e1; max-width: 60%; }
-        
-        .btn-download { 
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: #0f172a; border: none; padding: 8px 16px; 
-            border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 11px;
-            text-transform: uppercase; transition: 0.3s;
-        }
-
-        .btn-download:hover { transform: scale(1.05); filter: brightness(1.1); }
-
-        .loader { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--primary); border-top: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-left: 10px; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .card-footer { padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; background: rgba(15, 23, 42, 0.9); }
+        .font-info { display: flex; flex-direction: column; gap: 4px; max-width: 55%; }
+        .font-name { font-size: 10px; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .btn-copy-name { background: rgba(79, 172, 254, 0.1); border: 1px solid rgba(79, 172, 254, 0.3); color: var(--primary); padding: 2px 6px; border-radius: 4px; font-size: 8px; cursor: pointer; font-weight: bold; }
+        .footer-btns { display: flex; gap: 6px; }
+        .btn-download, .btn-copy { border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 9px; text-transform: uppercase; }
+        .btn-download { background: #334155; color: white; }
+        .btn-copy { background: rgba(79, 172, 254, 0.2); color: var(--primary); border: 1px solid var(--primary); }
     </style>
 </head>
 <body>
 
-<div id="status">Hệ thống đang sẵn sàng...</div>
+<div id="status" style="text-align: center; font-size: 11px; color: var(--primary); margin-bottom: 10px;">ĐANG KHỞI TẠO...</div>
 
-<div class="master-controls">
-    <div class="control-group">
-        <label>Nội dung hiển thị</label>
-        <input type="text" id="mainInput" value="Sadhu Sadhu Sadhu !" oninput="updateAll()">
-    </div>
-    
-    <div class="control-group1">
-        <label>Màu chữ </label>
-            <input type="color" id="colorText" value="#4facfe" title="Màu chữ" oninput="updateAll()">
-    </div>
-
-
-   <div class="control-group1">
-        <label>Màu nền</label>
-        <input type="color" id="colorBg" value="#0f172a" title="Màu nền" oninput="updateAll()">
-    </div>
-
-
-   <div class="control-group1">
-    <label>Xuất nền</label>
-    <div style="display: flex; align-items: center; height: 35px;">
-        <input type="checkbox" id="keepBg" checked style="width: 20px; height: 20px; cursor: pointer;">
-        <span style="font-size: 10px; margin-left: 5px;">CÓ NỀN</span>
-    </div>
+<div id="welcome" class="welcome-msg">
+    ✅ <b>ĐÃ FIX LỖI NỀN:</b> Khi bỏ tích <b>"CÓ NỀN"</b>, hệ thống sẽ xóa màu nền ngay lập tức kể cả khi bạn thay đổi thông số.
 </div>
 
-    <div class="control-group1">
-        <label>Màu viền</label>
-        <input type="color" id="strokeColor" value="#000000" oninput="updateAll()">
+<div class="master-controls">
+    <div class="left-panel">
+        <div class="control-item">
+            <label>Nội dung hiển thị</label>
+            <textarea id="mainInput" oninput="updateAll()" placeholder="Nhập nội dung..."></textarea>
+        </div>
+        <div class="search-export-row">
+            <div class="control-item">
+                <label>Tìm kiếm Font</label>
+                <input type="text" id="filterInput" placeholder="Dán tên font..." oninput="filterFonts()">
+            </div>
+            <div class="control-item">
+                <label>Xuất ảnh</label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" id="keepBg" checked onchange="updateAll()" style="width: 14px; height: 14px;">
+                    <span style="font-size: 9px; font-weight: bold;">CÓ NỀN</span>
+                </label>
+            </div>
+        </div>
     </div>
 
-
-
-    <div class="control-group">
-        <label>Size: <span id="fsVal">35</span>px</label>
-        <input type="range" id="sizeFont" min="20" max="120" value="35" oninput="updateAll()">
-    </div>
-
-    <div class="control-group">
-        <label>Khoảng cách: <span id="lsVal">0</span>px</label>
-        <input type="range" id="spacingText" min="-10" max="40" value="0" oninput="updateAll()">
-    </div>
-
-    <div class="control-group">
-        <label>Viền: <span id="swVal">0</span>px</label>
-        <input type="range" id="strokeWidth" min="0" max="4" step="0.2" value="0" oninput="updateAll()">
-    </div>
-
-    
-    <div class="control-group">
-        <label>Tìm kiếm Font</label>
-        <input type="text" id="filterInput" placeholder="Nhập tên..." oninput="filterFonts()">
+    <div class="right-panel">
+        <div class="params-row">
+            <div class="control-item">
+                <label>Rộng Khung</label>
+                <div class="input-with-btn">
+                    <input type="number" id="gridWidthInput" value="500">
+                    <button class="btn-apply-small" onclick="updateGridWidth()">OK</button>
+                </div>
+            </div>
+            <div class="control-item">
+                <label>Size Chữ</label>
+                <div class="input-with-btn">
+                    <input type="number" id="sizeFont" value="35">
+                    <button class="btn-apply-small" onclick="updateAll()">OK</button>
+                </div>
+            </div>
+            <div class="control-item">
+                <label>Dày viền</label>
+                <div class="input-with-btn">
+                    <input type="number" id="strokeWidth" value="0" step="0.5">
+                    <button class="btn-apply-small" onclick="updateAll()">OK</button>
+                </div>
+            </div>
+        </div>
+        <div class="colors-row">
+            <div class="control-item"><label>Chữ</label><input type="color" id="colorText" value="#4facfe" oninput="updateAll()"></div>
+            <div class="control-item"><label>Nền</label><input type="color" id="colorBg" value="#0f172a" oninput="updateAll()"></div>
+            <div class="control-item"><label>Viền</label><input type="color" id="strokeColor" value="#000000" oninput="updateAll()"></div>
+        </div>
+        
+        <div class="spacing-row">
+            <div class="control-item">
+                <label>Cách chữ</label>
+                <div class="input-with-btn">
+                    <input type="number" id="spacingText" value="0">
+                    <button class="btn-apply-small" onclick="updateAll()">OK</button>
+                </div>
+            </div>
+            <div class="control-item">
+                <label>Cách từ</label>
+                <div class="input-with-btn">
+                    <input type="number" id="wordSpacing" value="0">
+                    <button class="btn-apply-small" onclick="updateAll()">OK</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -226,25 +173,19 @@
         "https://ipfs.io/ipfs/bafybeicbczbfcyi4ahwe4f5flrq2d2nalddy3usbjeiqy247pyeuybi63q",
         "https://ipfs.io/ipfs/bafybeibpq4mm4gojqtqe4q4bzaikdcglxmrnalniolnnet4nrc75f6ayt4"
     ];
-
-    let db;
-    let allCards = [];
-
+    let db; let allCards = [];
     const req = indexedDB.open("FontStorePro", 1);
     req.onupgradeneeded = e => e.target.result.createObjectStore("fonts", { keyPath: "id" });
     req.onsuccess = e => { db = e.target.result; loadFonts(); };
 
     async function loadFonts() {
-        const status = document.getElementById('status');
         const tx = db.transaction("fonts", "readonly");
         const saved = await new Promise(r => tx.objectStore("fonts").getAll().onsuccess = e => r(e.target.result));
-
         if (saved.length > 0) {
-            status.innerText = `🚀 ĐANG NẠP ${saved.length} FONTS TỪ BỘ NHỚ...`;
             saved.forEach(f => renderFont(f.name, f.data));
-            setTimeout(() => { status.innerText = `✨ HỆ THỐNG SẴN SÀNG (${saved.length} FONTS)`; }, 1000);
+            document.getElementById('status').innerText = `✨ SẴN SÀNG (${saved.length} FONTS)`;
         } else {
-            status.innerHTML = `🌐 ĐANG TẢI DỮ LIỆU LẦN ĐẦU... <div class="loader"></div>`;
+            document.getElementById('status').innerText = `🌐 ĐANG TẢI...`;
             let count = 0;
             for (let link of IPFS_LINKS) {
                 try {
@@ -255,20 +196,15 @@
                             const data = await zip.files[name].async("arraybuffer");
                             const cleanName = name.split('/').pop();
                             renderFont(cleanName, data);
-                            saveToDB(cleanName + count, cleanName, data);
+                            const txW = db.transaction("fonts", "readwrite");
+                            txW.objectStore("fonts").put({ id: cleanName + count, name: cleanName, data });
                             count++;
-                            status.innerText = `ĐANG TẢI: ${count} FONTS...`;
                         }
                     }
                 } catch(e) {}
             }
-            status.innerText = `✅ HOÀN TẤT: ${count} FONTS ĐÃ SẴN SÀNG`;
+            document.getElementById('status').innerText = `✅ XONG: ${count} FONTS`;
         }
-    }
-
-    function saveToDB(id, name, data) {
-        const tx = db.transaction("fonts", "readwrite");
-        tx.objectStore("fonts").put({ id, name, data });
     }
 
     function renderFont(name, data) {
@@ -281,42 +217,58 @@
             card.setAttribute('data-name', name.toLowerCase());
             card.innerHTML = `
                 <div class="preview-wrapper" id="wrap_${fontId}">
-                    <div class="preview-text" style="font-family: '${fontId}'">${document.getElementById('mainInput').value}</div>
+                    <div class="preview-text" style="font-family: '${fontId}'">${document.getElementById('mainInput').value || 'Sadhu Sadhu!'}</div>
                 </div>
                 <div class="card-footer">
-                    <span class="font-name">${name}</span>
-                    <button class="btn-download" onclick="downloadSmart('${fontId}', '${name}')">Tải PNG</button>
-                </div>
-            `;
+                    <div class="font-info">
+                        <span class="font-name" title="${name}">${name}</span>
+                        <button class="btn-copy-name" onclick="copyFontName('${name}', this)">COPY FONT</button>
+                    </div>
+                    <div class="footer-btns">
+                        <button class="btn-copy" onclick="copyToClipboard(this)">Copy</button>
+                        <button class="btn-download" onclick="downloadSmart('${fontId}', '${name}')">PNG</button>
+                    </div>
+                </div>`;
             document.getElementById('fontGrid').appendChild(card);
             allCards.push(card);
+            updateAll(); // Cập nhật style ngay khi tạo card mới
         });
     }
 
+    function copyFontName(name, btn) {
+        navigator.clipboard.writeText(name).then(() => {
+            const oldText = btn.innerText; btn.innerText = "ĐÃ COPY!";
+            setTimeout(() => btn.innerText = oldText, 1200);
+        });
+    }
+
+    function updateGridWidth() {
+        document.documentElement.style.setProperty('--grid-width', document.getElementById('gridWidthInput').value + 'px');
+    }
+
     function updateAll() {
-        const val = document.getElementById('mainInput').value;
+        const val = document.getElementById('mainInput').value || "Sadhu Sadhu!";
         const color = document.getElementById('colorText').value;
         const bg = document.getElementById('colorBg').value;
         const fs = document.getElementById('sizeFont').value;
         const ls = document.getElementById('spacingText').value;
+        const ws = document.getElementById('wordSpacing').value;
         const sw = document.getElementById('strokeWidth').value;
         const sc = document.getElementById('strokeColor').value;
-
-        document.getElementById('fsVal').innerText = fs;
-        document.getElementById('lsVal').innerText = ls;
-        document.getElementById('swVal').innerText = sw;
+        const isKeepBg = document.getElementById('keepBg').checked;
 
         document.querySelectorAll('.preview-text').forEach(el => {
-            el.innerText = val;
-            el.style.setProperty('--text-color', color);
-            el.style.setProperty('--fs', fs + 'px');
-            el.style.setProperty('--ls', ls + 'px');
-            el.style.setProperty('--sw', sw + 'px');
-            el.style.setProperty('--sc', sc);
+            el.innerText = val; 
+            el.style.color = color; 
+            el.style.fontSize = fs + 'px';
+            el.style.letterSpacing = ls + 'px'; 
+            el.style.wordSpacing = ws + 'px';
+            el.style.webkitTextStroke = sw + 'px ' + sc;
         });
 
+        // SỬA LỖI TẠI ĐÂY: Kiểm tra checkbox trước khi áp dụng màu nền
         document.querySelectorAll('.preview-wrapper').forEach(el => {
-            el.style.setProperty('--bg-color', bg);
+            el.style.backgroundColor = isKeepBg ? bg : 'transparent';
         });
     }
 
@@ -324,48 +276,46 @@
         const q = document.getElementById('filterInput').value.toLowerCase();
         allCards.forEach(c => c.style.display = c.getAttribute('data-name').includes(q) ? 'block' : 'none');
     }
-    
-    
-    
-    
 
-   async function downloadSmart(id, fileName) {
-    const element = document.getElementById('wrap_' + id);
-    const isKeepBg = document.getElementById('keepBg').checked;
-    const bgColor = document.getElementById('colorBg').value;
-
-    // Nếu không chọn "CÓ NỀN", ta tạm thời ẩn nền của element đi
-    const originalBg = element.style.background;
-    if (!isKeepBg) {
-        element.style.setProperty('background', 'transparent', 'important');
+    async function copyToClipboard(btn) {
+        const wrap = btn.closest('.font-card').querySelector('.preview-wrapper');
+        const isKeepBg = document.getElementById('keepBg').checked;
+        const bgColor = isKeepBg ? document.getElementById('colorBg').value : null;
+        
+        const canvas = await html2canvas(wrap, { 
+            backgroundColor: bgColor,
+            scale: 4,
+            useCORS: true,
+            logging: false
+        });
+        
+        canvas.toBlob(async b => {
+            try {
+                await navigator.clipboard.write([new ClipboardItem({"image/png": b})]);
+                btn.innerText = "Xong!"; setTimeout(() => btn.innerText = "Copy", 1500);
+            } catch (err) {
+                alert("Không thể copy ảnh. Hãy thử dùng nút PNG để tải về!");
+            }
+        });
     }
 
-    const canvas = await html2canvas(element, {
-        // Nếu isKeepBg = true thì lấy màu đã chọn, nếu false thì để null (trong suốt)
-        backgroundColor: isKeepBg ? bgColor : null,
-        scale: 5,
-        useCORS: true,
-        logging: false,
-        allowTaint: true
-    });
-
-    // Trả lại nền cũ cho giao diện web
-    element.style.background = originalBg;
-
-    const ctx = canvas.getContext("2d");
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
-
-    const link = document.createElement('a');
-    // Đặt tên file để bạn dễ phân biệt
-    const suffix = isKeepBg ? "_bg" : "_transparent";
-    link.download = `${fileName}${suffix}.png`;
-    link.href = canvas.toDataURL("image/png", 1.0);
-    link.click();
-}
-
-
-    
+    async function downloadSmart(id, name) {
+        const wrap = document.getElementById('wrap_' + id);
+        const isKeepBg = document.getElementById('keepBg').checked;
+        const bgColor = isKeepBg ? document.getElementById('colorBg').value : null;
+        
+        const canvas = await html2canvas(wrap, { 
+            backgroundColor: bgColor,
+            scale: 5,
+            useCORS: true,
+            logging: false
+        });
+        
+        const link = document.createElement('a'); 
+        link.download = name + ".png"; 
+        link.href = canvas.toDataURL("image/png"); 
+        link.click();
+    }
 </script>
 </body>
 </html>
