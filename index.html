@@ -2,225 +2,342 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>800+ Font Uốn Lượn Gradient - Full IPFS</title>
+    <title>800+ Font Designer Pro Max</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-    /* Nền tổng thể tối sâu */
-    body { 
-        font-family: 'Arial', sans-serif; 
-        background: #121212; 
-        color: #e0e0e0; 
-        padding: 20px; 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-    }
+        :root {
+            --primary: #4facfe;
+            --accent: #00f2fe;
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --glass: rgba(30, 41, 59, 0.7);
+        }
 
-    /* Container màu xám đen để tách biệt với body */
-    .container { 
-        max-width: 1200px; 
-        width: 100%; 
-        background: #1e1e1e; 
-        padding: 30px; 
-        border-radius: 20px; 
-        box-shadow: 0 10px 40px rgba(0,0,0,0.5); 
-    }
-    
-    /* Trạng thái tải font */
-    #status { 
-        padding: 15px; 
-        margin-bottom: 20px; 
-        border-radius: 10px; 
-        font-weight: bold; 
-        text-align: center; 
-        background: #2c3e50; 
-        color: #3498db; 
-        border: 1px solid #34495e; 
-    }
-    
-    /* Thanh điều khiển dính (Sticky) */
-    .sticky-controls { 
-        position: sticky; 
-        top: 10px; 
-        z-index: 100; 
-        background: #252525; 
-        padding: 20px; 
-        border-radius: 15px; 
-        box-shadow: 0 5px 25px rgba(0,0,0,0.3); 
-        margin-bottom: 30px; 
-        display: flex; 
-        flex-direction: column; 
-        gap: 15px; 
-         align-items: center; 
-    }
+        body { 
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif; 
+            background: var(--bg-dark); 
+            color: #f8fafc; 
+            margin: 0; 
+            padding: 20px;
+            background-image: radial-gradient(circle at top right, #1e293b, #0f172a);
+            background-attachment: fixed;
+        }
 
-    /* Ô nhập liệu tối */
-    input#textInput, input#filterInput { 
-        width: 80%; 
-        background: #333; 
-        color: #fff; 
-        border: 2px solid #444; 
-        border-radius: 10px; 
-        outline: none; 
-        padding: 15px;
-    }
-    input#textInput { font-size: 24px; border-color: #3498db; }
-    input#filterInput { font-size: 16px; padding: 15px; }
-    input::placeholder { color: #888; }
+        /* Header Status */
+        #status { 
+            text-align: center; 
+            margin-bottom: 20px; 
+            font-size: 14px;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-    /* Grid và Thẻ Font */
-    .font-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
-    
-    .font-card { 
-        border: 1px solid #333; 
-        padding: 10px; 
-        border-radius: 15px; 
-        background: #252525; 
-        display: flex; 
-        flex-direction: column; 
-        transition: 0.3s; 
-    }
-    .font-card:hover { border-color: #3498db; transform: translateY(-3px); background: #2d2d2d; }
-    
-   /* Vùng hiển thị chữ - Đã fix nền tối để chụp ảnh chuẩn */
-    .preview-wrapper { 
-        padding: 20px; 
-        background: #1a1a1a; /* Nền tối cố định */
-        display: flex; justify-content: center; align-items: center; 
-        min-height: 50px; overflow: visible !important; border-radius: 10px;
-    }
-    .preview { 
-        font-size: 35px; line-height: 1.2; white-space: nowrap; padding: 10px 20px; font-weight: bold; display: inline-block;
-        background: linear-gradient(45deg, #4facfe, #00f2fe, #a8edea); 
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
+        /* Bảng điều khiển Lung Linh */
+        .master-controls {
+            position: sticky; top: 20px; z-index: 1000;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 25px; 
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            margin-bottom: 40px; 
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
+            gap: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
 
-    
-    /* Phần chân thẻ */
-    .card-footer { 
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center; 
-        border-top: 1px solid #333; 
-        padding: 15px; 
-        margin-top: auto; 
-    }
-    .font-info { font-size: 11px; color: #aaa; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
-    .btn-download { 
-        background: #2ecc71; 
-        color: white; 
-        border: none; 
-        padding: 8px 15px; 
-        border-radius: 5px; 
-        cursor: pointer; 
-        font-size: 12px; 
-        font-weight: bold; 
-    }
-    .btn-download:hover { background: #27ae60; }
+        .control-group { display: flex; flex-direction: column; gap: 8px; width: 150px; }
+        .control-group1 { display: flex; flex-direction: column; gap: 8px; width: 80px; }
+        
+        .control-group label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
 
-    /* Hiệu ứng quay khi tải */
-    .loader { display: inline-block; width: 14px; height: 14px; border: 2px solid #3498db; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; }
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-</style>
+        input[type="text"] { 
+            padding: 10px 15px; 
+            background: rgba(0,0,0,0.2); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            color: white; 
+            border-radius: 10px;
+            outline: none;
+            transition: 0.3s;
+        }
 
+        input[type="text"]:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(79, 172, 254, 0.3); }
 
+        /* Custom Range Slider */
+        input[type="range"] {
+            -webkit-appearance: none;
+            height: 6px;
+            background: #334155;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px; height: 18px;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        /* Color Input */
+        input[type="color"] {
+            -webkit-appearance: none;
+            border: none; width: 100%; height: 35px;
+            cursor: pointer; background: none;
+        }
+        input[type="color"]::-webkit-slider-thumb { border-radius: 10px; }
+
+        /* Grid hiển thị Font */
+        .font-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 25px; 
+        }
+
+        /* Font Card tinh tế */
+        .font-card { 
+            background: var(--card-bg); 
+            border-radius: 18px; 
+            overflow: hidden; 
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+        }
+
+        .font-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            border-color: rgba(79, 172, 254, 0.4);
+        }
+
+        .preview-wrapper {
+            height: 150px; display: flex; align-items: center; justify-content: center;
+            background: var(--bg-color, #1a1a1a);
+            overflow: hidden; position: relative;
+            transition: background 0.3s;
+        }
+
+        .preview-text {
+            font-size: var(--fs, 35px);
+            color: var(--text-color, #4facfe);
+            letter-spacing: var(--ls, 0px);
+            -webkit-text-stroke: var(--sw, 0px) var(--sc, #000);
+            white-space: nowrap;
+            transition: 0.1s;
+        }
+
+        .card-footer { 
+            padding: 15px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: rgba(15, 23, 42, 0.5); 
+        }
+
+        .font-name { font-size: 12px; font-weight: 500; color: #cbd5e1; max-width: 60%; }
+        
+        .btn-download { 
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #0f172a; border: none; padding: 8px 16px; 
+            border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 11px;
+            text-transform: uppercase; transition: 0.3s;
+        }
+
+        .btn-download:hover { transform: scale(1.05); filter: brightness(1.1); }
+
+        .loader { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--primary); border-top: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-left: 10px; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
 </head>
 <body>
 
-<div class="container">
-    <h2 style="text-align:center; color:#2c3e50;">Kho 800+ Font Gradient Nghệ Thuật</h2>
-    <div id="status">Đang quét nguồn IPFS...</div>
+<div id="status">Hệ thống đang sẵn sàng...</div>
 
-    <div class="sticky-controls">
-        <input type="text" id="textInput" placeholder="Nhập nội dung chữ..." oninput="updateAllPreviews()">
-        <input type="text" id="filterInput" placeholder="Tìm tên font..." oninput="filterFonts()">
+<div class="master-controls">
+    <div class="control-group">
+        <label>Nội dung hiển thị</label>
+        <input type="text" id="mainInput" value="Thầy Vũ Gia Kiệm" oninput="updateAll()">
+    </div>
+    
+    <div class="control-group1">
+        <label>Màu chữ </label>
+            <input type="color" id="colorText" value="#4facfe" title="Màu chữ" oninput="updateAll()">
     </div>
 
-    <div class="font-grid" id="fontGrid"></div>
+
+   <div class="control-group1">
+        <label>Màu nền</label>
+        <input type="color" id="colorBg" value="#0f172a" title="Màu nền" oninput="updateAll()">
+    </div>
+
+
+    <div class="control-group1">
+        <label>Màu viền</label>
+        <input type="color" id="strokeColor" value="#000000" oninput="updateAll()">
+    </div>
+
+
+
+    <div class="control-group">
+        <label>Size: <span id="fsVal">45</span>px</label>
+        <input type="range" id="sizeFont" min="20" max="120" value="45" oninput="updateAll()">
+    </div>
+
+    <div class="control-group">
+        <label>Khoảng cách: <span id="lsVal">0</span>px</label>
+        <input type="range" id="spacingText" min="-10" max="40" value="0" oninput="updateAll()">
+    </div>
+
+    <div class="control-group">
+        <label>Viền: <span id="swVal">0</span>px</label>
+        <input type="range" id="strokeWidth" min="0" max="4" step="0.2" value="0" oninput="updateAll()">
+    </div>
+
+    
+    <div class="control-group">
+        <label>Tìm kiếm Font</label>
+        <input type="text" id="filterInput" placeholder="Nhập tên..." oninput="filterFonts()">
+    </div>
 </div>
 
-<script>
+<div id="fontGrid" class="font-grid"></div>
 
-// Thêm bao nhiêu link cũng được, chú ý dấu phảy cuối link, ko cần sửa logic code
+<script>
     const IPFS_LINKS = [
         "https://tomato-delicate-zebra-533.mypinata.cloud/ipfs/bafybeihealjo5tc2mvh3ksx22ps7yjbpcj4pkm67r33qkx72ppw5lberau",
         "https://ipfs.io/ipfs/bafybeicbczbfcyi4ahwe4f5flrq2d2nalddy3usbjeiqy247pyeuybi63q",
         "https://ipfs.io/ipfs/bafybeibpq4mm4gojqtqe4q4bzaikdcglxmrnalniolnnet4nrc75f6ayt4"
     ];
 
-    let allFontCards = [];
+    let db;
+    let allCards = [];
 
-    async function init() {
-        const grid = document.getElementById('fontGrid');
+    const req = indexedDB.open("FontStorePro", 1);
+    req.onupgradeneeded = e => e.target.result.createObjectStore("fonts", { keyPath: "id" });
+    req.onsuccess = e => { db = e.target.result; loadFonts(); };
+
+    async function loadFonts() {
         const status = document.getElementById('status');
-        let total = 0;
+        const tx = db.transaction("fonts", "readonly");
+        const saved = await new Promise(r => tx.objectStore("fonts").getAll().onsuccess = e => r(e.target.result));
 
-        for (let link of IPFS_LINKS) {
-            try {
-                const response = await fetch(link);
-                const zip = await JSZip.loadAsync(await response.blob());
-                const files = Object.keys(zip.files).filter(name => !zip.files[name].dir && /\.(ttf|otf)$/i.test(name));
-
-                for (let fileName of files) {
-                    try {
-                        const fontData = await zip.files[fileName].async("arraybuffer");
-                        const fontId = 'f_' + Math.random().toString(36).substr(2, 9);
-                        const fontFace = new FontFace(fontId, fontData);
-                        await fontFace.load();
-                        document.fonts.add(fontFace);
-
-                        const cleanName = fileName.split('/').pop();
-                        const card = document.createElement('div');
-                        card.className = 'font-card';
-                        card.setAttribute('data-name', cleanName.toLowerCase());
-                        card.innerHTML = `
-                            <div class="preview-wrapper" id="wrap_${fontId}">
-                                <div class="preview" style="font-family: '${fontId}'">Thầy Vũ Gia Kiệm</div>
-                            </div>
-                            <div class="card-footer">
-                                <span class="font-info">${cleanName}</span>
-                                <button class="btn-download" onclick="downloadPNG('wrap_${fontId}', '${cleanName}')">Tải PNG</button>
-                            </div>
-                        `;
-                        grid.appendChild(card);
-                        allFontCards.push(card);
-                        total++;
-                        status.innerHTML = `Đang nạp: ${total} font... <div class="loader"></div>`;
-                    } catch (e) {}
-                }
-            } catch (err) { console.error("Lỗi nguồn IPFS:", err); }
+        if (saved.length > 0) {
+            status.innerText = `🚀 ĐANG NẠP ${saved.length} FONTS TỪ BỘ NHỚ...`;
+            saved.forEach(f => renderFont(f.name, f.data));
+            setTimeout(() => { status.innerText = `✨ HỆ THỐNG SẴN SÀNG (${saved.length} FONTS)`; }, 1000);
+        } else {
+            status.innerHTML = `🌐 ĐANG TẢI DỮ LIỆU LẦN ĐẦU... <div class="loader"></div>`;
+            let count = 0;
+            for (let link of IPFS_LINKS) {
+                try {
+                    const resp = await fetch(link);
+                    const zip = await JSZip.loadAsync(await resp.blob());
+                    for (let name in zip.files) {
+                        if (!zip.files[name].dir && /\.(ttf|otf)$/i.test(name)) {
+                            const data = await zip.files[name].async("arraybuffer");
+                            const cleanName = name.split('/').pop();
+                            renderFont(cleanName, data);
+                            saveToDB(cleanName + count, cleanName, data);
+                            count++;
+                            status.innerText = `ĐANG TẢI: ${count} FONTS...`;
+                        }
+                    }
+                } catch(e) {}
+            }
+            status.innerText = `✅ HOÀN TẤT: ${count} FONTS ĐÃ SẴN SÀNG`;
         }
-        status.innerText = `✅ Hoàn tất! Đã nạp thành công ${total} font từ IPFS.`;
     }
 
-    function updateAllPreviews() {
-        const val = document.getElementById('textInput').value || "Thầy Vũ Gia Kiệm";
-        document.querySelectorAll('.preview').forEach(el => el.innerText = val);
+    function saveToDB(id, name, data) {
+        const tx = db.transaction("fonts", "readwrite");
+        tx.objectStore("fonts").put({ id, name, data });
+    }
+
+    function renderFont(name, data) {
+        const fontId = 'f' + Math.random().toString(36).substr(2, 5);
+        const fontFace = new FontFace(fontId, data);
+        fontFace.load().then(f => {
+            document.fonts.add(f);
+            const card = document.createElement('div');
+            card.className = 'font-card';
+            card.setAttribute('data-name', name.toLowerCase());
+            card.innerHTML = `
+                <div class="preview-wrapper" id="wrap_${fontId}">
+                    <div class="preview-text" style="font-family: '${fontId}'">${document.getElementById('mainInput').value}</div>
+                </div>
+                <div class="card-footer">
+                    <span class="font-name">${name}</span>
+                    <button class="btn-download" onclick="downloadSmart('${fontId}', '${name}')">Tải PNG</button>
+                </div>
+            `;
+            document.getElementById('fontGrid').appendChild(card);
+            allCards.push(card);
+        });
+    }
+
+    function updateAll() {
+        const val = document.getElementById('mainInput').value;
+        const color = document.getElementById('colorText').value;
+        const bg = document.getElementById('colorBg').value;
+        const fs = document.getElementById('sizeFont').value;
+        const ls = document.getElementById('spacingText').value;
+        const sw = document.getElementById('strokeWidth').value;
+        const sc = document.getElementById('strokeColor').value;
+
+        document.getElementById('fsVal').innerText = fs;
+        document.getElementById('lsVal').innerText = ls;
+        document.getElementById('swVal').innerText = sw;
+
+        document.querySelectorAll('.preview-text').forEach(el => {
+            el.innerText = val;
+            el.style.setProperty('--text-color', color);
+            el.style.setProperty('--fs', fs + 'px');
+            el.style.setProperty('--ls', ls + 'px');
+            el.style.setProperty('--sw', sw + 'px');
+            el.style.setProperty('--sc', sc);
+        });
+
+        document.querySelectorAll('.preview-wrapper').forEach(el => {
+            el.style.setProperty('--bg-color', bg);
+        });
     }
 
     function filterFonts() {
-        const query = document.getElementById('filterInput').value.toLowerCase();
-        allFontCards.forEach(card => {
-            card.style.display = card.getAttribute('data-name').includes(query) ? 'flex' : 'none';
-        });
+        const q = document.getElementById('filterInput').value.toLowerCase();
+        allCards.forEach(c => c.style.display = c.getAttribute('data-name').includes(q) ? 'block' : 'none');
     }
 
-    async function downloadPNG(divId, fileName) {
-        const element = document.getElementById(divId);
-        const canvas = await html2canvas(element, { 
-            backgroundColor: null, 
-            scale: 3,
-            useCORS: true
+    async function downloadSmart(id, fileName) {
+        const element = document.getElementById('wrap_' + id);
+        const bgColor = document.getElementById('colorBg').value;
+
+        const canvas = await html2canvas(element, {
+            backgroundColor: null,
+            scale: 5,
+            useCORS: true,
+            logging: false,
+            allowTaint: true
         });
+
+        const ctx = canvas.getContext("2d");
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
+
         const link = document.createElement('a');
         link.download = `${fileName}.png`;
-        link.href = canvas.toDataURL("image/png");
+        link.href = canvas.toDataURL("image/png", 1.0);
         link.click();
     }
-
-    init();
 </script>
 </body>
 </html>
-
