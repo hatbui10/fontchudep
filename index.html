@@ -181,6 +181,14 @@
     </div>
 
 
+   <div class="control-group1">
+    <label>Xuất nền</label>
+    <div style="display: flex; align-items: center; height: 35px;">
+        <input type="checkbox" id="keepBg" checked style="width: 20px; height: 20px; cursor: pointer;">
+        <span style="font-size: 10px; margin-left: 5px;">CÓ NỀN</span>
+    </div>
+</div>
+
     <div class="control-group1">
         <label>Màu viền</label>
         <input type="color" id="strokeColor" value="#000000" oninput="updateAll()">
@@ -316,25 +324,32 @@
         const q = document.getElementById('filterInput').value.toLowerCase();
         allCards.forEach(c => c.style.display = c.getAttribute('data-name').includes(q) ? 'block' : 'none');
     }
+    
+    
+    
+    
 
-    async function downloadSmart(id, fileName) {
+   async function downloadSmart(id, fileName) {
     const element = document.getElementById('wrap_' + id);
-    
-    // 1. Lưu lại màu nền hiện tại để khôi phục sau khi chụp
+    const isKeepBg = document.getElementById('keepBg').checked;
+    const bgColor = document.getElementById('colorBg').value;
+
+    // Nếu không chọn "CÓ NỀN", ta tạm thời ẩn nền của element đi
     const originalBg = element.style.background;
-    
-    // 2. Ép nền của vùng chứa về trong suốt trước khi chụp
-    element.style.background = 'transparent';
+    if (!isKeepBg) {
+        element.style.setProperty('background', 'transparent', 'important');
+    }
 
     const canvas = await html2canvas(element, {
-        backgroundColor: null, // Báo cho thư viện không vẽ nền canvas
+        // Nếu isKeepBg = true thì lấy màu đã chọn, nếu false thì để null (trong suốt)
+        backgroundColor: isKeepBg ? bgColor : null,
         scale: 5,
         useCORS: true,
         logging: false,
         allowTaint: true
     });
 
-    // 3. Khôi phục lại màu nền trên giao diện web để bạn tiếp tục làm việc
+    // Trả lại nền cũ cho giao diện web
     element.style.background = originalBg;
 
     const ctx = canvas.getContext("2d");
@@ -342,7 +357,9 @@
     ctx.imageSmoothingQuality = "high";
 
     const link = document.createElement('a');
-    link.download = `${fileName}_transparent.png`;
+    // Đặt tên file để bạn dễ phân biệt
+    const suffix = isKeepBg ? "_bg" : "_transparent";
+    link.download = `${fileName}${suffix}.png`;
     link.href = canvas.toDataURL("image/png", 1.0);
     link.click();
 }
