@@ -318,26 +318,37 @@
     }
 
     async function downloadSmart(id, fileName) {
-        const element = document.getElementById('wrap_' + id);
-        const bgColor = document.getElementById('colorBg').value;
+    const element = document.getElementById('wrap_' + id);
+    
+    // 1. Lưu lại màu nền hiện tại để khôi phục sau khi chụp
+    const originalBg = element.style.background;
+    
+    // 2. Ép nền của vùng chứa về trong suốt trước khi chụp
+    element.style.background = 'transparent';
 
-        const canvas = await html2canvas(element, {
-            backgroundColor: null,
-            scale: 5,
-            useCORS: true,
-            logging: false,
-            allowTaint: true
-        });
+    const canvas = await html2canvas(element, {
+        backgroundColor: null, // Báo cho thư viện không vẽ nền canvas
+        scale: 5,
+        useCORS: true,
+        logging: false,
+        allowTaint: true
+    });
 
-        const ctx = canvas.getContext("2d");
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = "high";
+    // 3. Khôi phục lại màu nền trên giao diện web để bạn tiếp tục làm việc
+    element.style.background = originalBg;
 
-        const link = document.createElement('a');
-        link.download = `${fileName}.png`;
-        link.href = canvas.toDataURL("image/png", 1.0);
-        link.click();
-    }
+    const ctx = canvas.getContext("2d");
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+
+    const link = document.createElement('a');
+    link.download = `${fileName}_transparent.png`;
+    link.href = canvas.toDataURL("image/png", 1.0);
+    link.click();
+}
+
+
+    
 </script>
 </body>
 </html>
