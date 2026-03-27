@@ -128,8 +128,8 @@
             <div class="control-item"><label>Viền</label><input type="color" id="strokeColor" value="#000000" oninput="updateAll()"></div>
         </div>
         <div class="spacing-row">
-            <div class="control-item"><label>Cách chữ</label><div class="input-with-btn"><input type="number" id="spacingText" value="2"><button class="btn-apply-small" onclick="updateAll()">OK</button></div></div>
-            <div class="control-item"><label>Cách từ</label><div class="input-with-btn"><input type="number" id="wordSpacing" value="5"><button class="btn-apply-small" onclick="updateAll()">OK</button></div></div>
+            <div class="control-item"><label>Khoảng cách giữa các chữ cái </label><div class="input-with-btn"><input type="number" id="spacingText" value="2"><button class="btn-apply-small" onclick="updateAll()">OK</button></div></div>
+            <div class="control-item"><label>Khoảng cách giữa các từ</label><div class="input-with-btn"><input type="number" id="wordSpacing" value="5"><button class="btn-apply-small" onclick="updateAll()">OK</button></div></div>
         </div>
     </div>
 </div>
@@ -169,7 +169,7 @@
                     }
                 } catch(e) {}
             }
-            document.getElementById('status').innerText = `✅ XONG: ${count} FONTS`;
+            document.getElementById('status').innerText = `✅ Đã copy xong!: ${count} FONTS`;
         }
     }
 
@@ -181,7 +181,7 @@
             const card = document.createElement('div');
             card.className = 'font-card';
             card.setAttribute('data-name', name.toLowerCase());
-            card.innerHTML = `<div class="preview-wrapper" id="wrap_${fontId}"><div class="preview-text" style="font-family: '${fontId}'">${document.getElementById('mainInput').value || 'Sadhu Sadhu!'}</div></div><div class="card-footer"><div class="font-info"><span class="font-name" title="${name}">${name}</span><button class="btn-copy-name" onclick="copyFontName('${name}', this)">COPY FONT</button></div><div class="footer-btns"><button class="btn-copy" onclick="copyToClipboard(this)">Copy</button><button class="btn-download" onclick="downloadSmart('${fontId}', '${name}')">PNG</button></div></div>`;
+            card.innerHTML = `<div class="preview-wrapper" id="wrap_${fontId}"><div class="preview-text" style="font-family: '${fontId}'">${document.getElementById('mainInput').value || 'Sadhu Sadhu!'}</div></div><div class="card-footer"><div class="font-info"><span class="font-name" title="${name}">${name}</span><button class="btn-copy-name" onclick="copyFontName('${name}', this)">COPY FONT</button></div><div class="footer-btns"><button class="btn-copy" onclick="copyToClipboard(this)">Copy chữ </button><button class="btn-download" onclick="downloadSmart('${fontId}', '${name}')"> Tải PNG</button></div></div>`;
             document.getElementById('fontGrid').appendChild(card);
             allCards.push(card);
             updateAll();
