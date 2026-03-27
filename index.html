@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Siêu Kho Font Uốn Lượn - 3 Nguồn IPFS</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body { font-family: 'Arial', sans-serif; background: #f0f2f5; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .container { max-width: 1200px; width: 100%; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        
+        #status { padding: 15px; margin-bottom: 20px; border-radius: 10px; font-weight: bold; text-align: center; background: #e8f4fd; color: #2980b9; border: 1px solid #d1e9fb; }
+        
+        .sticky-controls { position: sticky; top: 10px; z-index: 100; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); margin-bottom: 30px; display: flex; flex-direction: column; gap: 15px; }
+        input#textInput { width: 100%; padding: 15px; font-size: 24px; border: 2px solid #3498db; border-radius: 10px; outline: none; }
+        input#filterInput { width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; outline: none; }
+
+        .font-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
+        .font-card { border: 1px solid #eee; padding: 15px; border-radius: 15px; background: #fff; display: flex; flex-direction: column; transition: 0.3s; }
+        .font-card:hover { border-color: #3498db; transform: translateY(-3px); }
+        
+        .preview-wrapper { padding: 15px; background: transparent; display: flex; justify-content: center; align-items: center; min-height: 100px; overflow: hidden; }
+        .preview { font-size: 45px; color: #003399; line-height: 1.4; white-space: nowrap; }
+        
+        .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f0f0f0; padding-top: 10px; margin-top: auto; }
+        .font-info { font-size: 11px; color: #7f8c8d; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
+        
+        .btn-download { background: #27ae60; color: white; border: none; padding: 7px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        .btn-download:hover { background: #219150; }
+
+        .loader { display: inline-block; width: 14px; height: 14px; border: 2px solid #3498db; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="text-align:center; color:#2c3e50;">Kho Font Uốn Lượn Tổng Hợp (3 Nguồn IPFS)</h2>
+    
+    <div id="status">Đang khởi tạo kết nối IPFS...</div>
+
+    <div class="sticky-controls">
+        <input type="text" id="textInput" placeholder="Nhập nội dung chữ (Thầy Vũ Gia Kiệm)..." oninput="updateAllPreviews()">
+        <input type="text" id="filterInput" placeholder="Tìm tên font (Gõ 'Beautiful', 'Mutlu', 'Mirella'...)" oninput="filterFonts()">
+    </div>
+
+    <div class="font-grid" id="fontGrid"></div>
+</div>
+
+<script>
+    // DANH SÁCH 3 LINK IPFS CỦA BẠN
+    const IPFS_LINKS = [
+        "https://tomato-delicate-zebra-533.mypinata.cloud/ipfs/bafybeihealjo5tc2mvh3ksx22ps7yjbpcj4pkm67r33qkx72ppw5lberau",
+        "https://ipfs.io/ipfs/bafybeicbczbfcyi4ahwe4f5flrq2d2nalddy3usbjeiqy247pyeuybi63q",
+        "https://ipfs.io/ipfs/bafybeibpq4mm4gojqtqe4q4bzaikdcglxmrnalniolnnet4nrc75f6ayt4"
+    ];
+
+    let allFontCards = [];
+
+    async function init() {
+        const status = document.getElementById('status');
+        let totalFound = 0;
+
+        for (let i = 0; i < IPFS_LINKS.length; i++) {
+            status.innerHTML = `Đang quét nguồn #${i+1}... <div class="loader"></div>`;
+            try {
+                const response = await fetch(IPFS_LINKS[i]);
+                const blob = await response.blob();
+                const zip = await JSZip.loadAsync(blob);
+                
+                // Quét tất cả file font trong mọi thư mục con
+                const files = Object.keys(zip.files).filter(name => 
+                    !zip.files[name].dir && (name.toLowerCase().endsWith('.ttf') || name.toLowerCase().endsWith('.otf'))
+                );
+
+                for (let fileName of files) {
+                    try {
+                        const fontData = await zip.files[fileName].async("arraybuffer");
+                        const fontId = 'f_' + Math.random().toString(36).substr(2, 9);
+                        const cleanName = fileName.split('/').pop().replace(/\.(ttf|otf)$/i, '');
+
+                        const fontFace = new FontFace(fontId, fontData);
+                        await fontFace.load();
+                        document.fonts.add(fontFace);
+
+                        createCard(fontId, cleanName);
+                        totalFound++;
+                        status.innerHTML = `Đang nạp: ${totalFound} font uốn lượn... <div class="loader"></div>`;
+                    } catch (e) { console.warn("Lỗi font:", fileName); }
+                }
+            } catch (err) {
+                console.error("Lỗi nguồn IPFS:", IPFS_LINKS[i], err);
+            }
+        }
+        status.innerText = `✅ Đã sẵn sàng! Tổng cộng ${totalFound} font từ 3 nguồn IPFS đã được kích hoạt.`;
+        status.style.background = "#eafaf1";
+        status.style.color = "#27ae60";
+    }
+
+    function createCard(fontId, fontName) {
+        const grid = document.getElementById('fontGrid');
+        const card = document.createElement('div');
+        card.className = 'font-card';
+        card.setAttribute('data-name', fontName.toLowerCase());
+        card.innerHTML = `
+            <div class="preview-wrapper" id="wrap_${fontId}">
+                <div class="preview" style="font-family: '${fontId}'">Thầy Vũ Gia Kiệm</div>
+            </div>
+            <div class="card-footer">
+                <span class="font-info" title="${fontName}">${fontName}</span>
+                <button class="btn-download" onclick="downloadPNG('wrap_${fontId}', '${fontName}')">Tải PNG</button>
+            </div>
+        `;
+        grid.appendChild(card);
+        allFontCards.push(card);
+    }
+
+    function updateAllPreviews() {
+        const val = document.getElementById('textInput').value || "Thầy Vũ Gia Kiệm";
+        document.querySelectorAll('.preview').forEach(el => el.innerText = val);
+    }
+
+    function filterFonts() {
+        const query = document.getElementById('filterInput').value.toLowerCase();
+        allFontCards.forEach(card => {
+            const name = card.getAttribute('data-name');
+            card.style.display = name.includes(query) ? 'flex' : 'none';
+        });
+    }
+
+    async function downloadPNG(divId, fileName) {
+        const element = document.getElementById(divId);
+        const canvas = await html2canvas(element, { backgroundColor: null, scale: 3 });
+        const link = document.createElement('a');
+        link.download = `${fileName}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    }
+
+    init();
+</script>
+
+</body>
+</html>
