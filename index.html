@@ -83,31 +83,19 @@
     }
     .font-card:hover { border-color: #3498db; transform: translateY(-3px); background: #2d2d2d; }
     
-    /* Vùng hiển thị chữ (Vẫn để nền trong suốt để thấy nền tối của card) */
+   /* Vùng hiển thị chữ - Đã fix nền tối để chụp ảnh chuẩn */
     .preview-wrapper { 
         padding: 20px; 
-        background: transparent; 
-        display: flex; 
-        justify-content: center; 
-        align-items: center; 
-        min-height: 30px; 
-        overflow: visible !important; 
+        background: #1a1a1a; /* Nền tối cố định */
+        display: flex; justify-content: center; align-items: center; 
+        min-height: 50px; overflow: visible !important; border-radius: 10px;
     }
-    
-    /* Hiệu ứng chữ Gradient nổi bật trên nền tối */
     .preview { 
-        font-size: 35px; 
-        line-height: 1.2; 
-        white-space: nowrap; 
-        padding: 10px 20px;
-        font-weight: bold;
-        display: inline-block;
-        background: linear-gradient(45deg, #4facfe, #00f2fe, #a8edea); /* Màu sáng hơn để nổi trên nền tối */
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        overflow: visible !important;
+        font-size: 35px; line-height: 1.2; white-space: nowrap; padding: 10px 20px; font-weight: bold; display: inline-block;
+        background: linear-gradient(45deg, #4facfe, #00f2fe, #a8edea); 
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
+
     
     /* Phần chân thẻ */
     .card-footer { 
